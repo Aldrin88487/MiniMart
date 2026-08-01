@@ -1,12 +1,19 @@
 import React from 'react';
 
+const API_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000';
+
+const getImageSrc = (image) => {
+  if (!image) return '';
+  return image.startsWith('/uploads') ? `${API_URL}${image}` : image;
+};
+
 const ProductCard = ({ product, onViewDetails, onAddToCart, user }) => {
   return (
     <div className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition duration-200 overflow-hidden flex flex-col h-full">
       {/* Product Image */}
       <div className="h-48 w-full bg-gray-100 overflow-hidden relative">
         <img
-          src={product.image}
+          src={getImageSrc(product.image)}
           alt={product.name}
           className="w-full h-full object-cover hover:scale-105 transition duration-300"
           onError={(e) => {

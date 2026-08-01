@@ -59,6 +59,16 @@ export const deleteProductAPI = async (id) => {
   return response.data;
 };
 
+// Upload product image (returns the image path)
+export const uploadProductImageAPI = async (imageFile) => {
+  const formData = new FormData();
+  formData.append('image', imageFile);
+  const response = await api.post('/products/upload', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data;
+};
+
 // Cart Services
 export const getCartAPI = async () => {
   const response = await api.get('/cart');

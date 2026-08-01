@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { uploadProductImageAPI } from '../services/api';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +12,9 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
     description: ''
   });
 
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -20,6 +26,15 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
         image: initialData.image || '',
         description: initialData.description || ''
       });
+      // Show preview for existing image
+      if (initialData.image) {
+        setImagePreview(
+          initialData.image.startsWith('/uploads')
+            ? `${API_URL}${initialData.image}`
+            : initialData.image
+        );
+      }
+      setImageFile(null);
     } else {
       setFormData({
         name: '',
@@ -28,6 +43,8 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
         image: '',
         description: ''
       });
+      setImageFile(null);
+      setImagePreview('');
     }
   }, [initialData]);
 
@@ -43,6 +60,19 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      // Clear URL field and any image error
+      setFormData({ ...formData, image: '' });
+      if (errors.image) {
+        setErrors({ ...errors, image: '' });
+      }
+    }
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = 'Name is required';
@@ -50,20 +80,41 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
       newErrors.price = 'Please enter a valid price (>= 0)';
     }
     if (!formData.category.trim()) newErrors.category = 'Category is required';
-    if (!formData.image.trim()) newErrors.image = 'Image URL is required';
+    // Image is required: either a file was selected or a URL was typed
+    if (!imageFile && !formData.image.trim()) {
+      newErrors.image = 'Please upload an image or enter a URL';
+    }
     if (!formData.description.trim()) newErrors.description = 'Description is required';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
+
+    let imageValue = formData.image;
+
+    // If a file was selected, upload it first
+    if (imageFile) {
+      try {
+        setUploading(true);
+        const uploadResult = await uploadProductImageAPI(imageFile);
+        imageValue = uploadResult.image; // e.g. "/uploads/image-123456.jpg"
+      } catch (err) {
+        setErrors({ ...errors, image: 'Image upload failed. Please try again.' });
+        setUploading(false);
+        return;
+      } finally {
+        setUploading(false);
+      }
+    }
 
     // Convert price to a number
     const submittedData = {
       ...formData,
+      image: imageValue,
       price: Number(formData.price)
     };
 
@@ -78,6 +129,8 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
         image: '',
         description: ''
       });
+      setImageFile(null);
+      setImagePreview('');
     }
   };
 
@@ -140,22 +193,71 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
           </select>
           {errors.category && <p className="text-red-500 text-xs mt-1">{errors.category}</p>}
         </div>
+      </div>
 
-        {/* Image URL */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+      {/* Image Upload */}
+      <div className="mt-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+        
+        {/* File Upload */}
+        <div className={`border-2 border-dashed rounded-md p-4 text-center cursor-pointer hover:border-blue-400 transition ${
+          errors.image ? 'border-red-400' : 'border-gray-300'
+        }`}>
           <input
-            type="text"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            placeholder="e.g. https://example.com/image.jpg"
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-              errors.image ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
-            }`}
+            type="file"
+            accept="image/jpeg,image/jpg,image/png,image/webp"
+            onChange={handleFileChange}
+            className="hidden"
+            id="image-upload"
           />
-          {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image}</p>}
+          <label htmlFor="image-upload" className="cursor-pointer">
+            {imagePreview ? (
+              <div className="flex flex-col items-center">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="w-24 h-24 object-cover rounded-md border mb-2"
+                />
+                <span className="text-xs text-blue-600 hover:underline">Click to change image</span>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center text-gray-400">
+                <svg className="w-8 h-8 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-xs">Click to upload image</span>
+                <span className="text-xs text-gray-300 mt-0.5">JPEG, PNG, WebP (max 5MB)</span>
+              </div>
+            )}
+          </label>
         </div>
+
+        {/* OR separator */}
+        <div className="flex items-center my-3">
+          <hr className="flex-1 border-gray-200" />
+          <span className="px-2 text-xs text-gray-400">OR</span>
+          <hr className="flex-1 border-gray-200" />
+        </div>
+
+        {/* URL Input */}
+        <input
+          type="text"
+          name="image"
+          value={formData.image}
+          onChange={(e) => {
+            handleChange(e);
+            // Clear file selection if user types a URL
+            if (e.target.value) {
+              setImageFile(null);
+              setImagePreview(e.target.value);
+            }
+          }}
+          placeholder="Or paste an image URL..."
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
+            errors.image ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+          }`}
+        />
+        {errors.image && <p className="text-red-500 text-xs mt-1">{errors.image}</p>}
       </div>
 
       {/* Description */}
@@ -187,9 +289,14 @@ const ProductForm = ({ onSubmit, initialData = null, onCancel = null }) => {
         )}
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-md text-sm font-medium shadow-sm transition"
+          disabled={uploading}
+          className={`px-5 py-2 rounded-md text-sm font-medium shadow-sm transition ${
+            uploading
+              ? 'bg-gray-400 cursor-not-allowed text-white'
+              : 'bg-blue-600 hover:bg-blue-700 text-white'
+          }`}
         >
-          {initialData ? 'Save Changes' : 'Add Product'}
+          {uploading ? 'Uploading...' : initialData ? 'Save Changes' : 'Add Product'}
         </button>
       </div>
     </form>

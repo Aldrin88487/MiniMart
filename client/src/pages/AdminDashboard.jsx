@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getProductsAPI, createProductAPI, updateProductAPI, deleteProductAPI } from '../services/api';
+
+const API_URL = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : 'http://localhost:5000';
+
+const getImageSrc = (image) => {
+  if (!image) return '';
+  return image.startsWith('/uploads') ? `${API_URL}${image}` : image;
+};
 import ProductForm from '../components/ProductForm';
 
 const AdminDashboard = ({ user }) => {
@@ -168,7 +175,7 @@ const AdminDashboard = ({ user }) => {
                       <tr key={product._id} className="hover:bg-gray-50 transition">
                         <td className="px-6 py-4 flex items-center space-x-3">
                           <img
-                            src={product.image}
+                            src={getImageSrc(product.image)}
                             alt={product.name}
                             className="w-10 h-10 object-cover rounded border bg-gray-50"
                             onError={(e) => {
