@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminDashboard from './pages/AdminDashboard';
 import OrderPlaced from './pages/OrderPlaced';
+import Checkout from './pages/Checkout';
 import { getCartAPI, addToCartAPI, removeFromCartAPI, clearCartAPI } from './services/api';
 
 function App() {
@@ -141,6 +142,22 @@ function App() {
                     removeFromCart={handleRemoveFromCart}
                     clearCart={handleClearCart}
                     loading={cartLoading}
+                  />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            {/* Checkout */}
+            <Route
+              path="/checkout"
+              element={
+                user ? (
+                  <Checkout
+                    cart={cart}
+                    setCart={setCart}
+                    setCartCount={setCartCount}
                   />
                 ) : (
                   <Navigate to="/login" />

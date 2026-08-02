@@ -136,27 +136,7 @@ const Cart = ({ cart, updateQuantity, removeFromCart, clearCart, loading }) => {
                 Continue Shopping
               </Link>
               <button
-                onClick={() => {
-                  // Save order to localStorage for the OrderPlaced page
-                  const total = calculateTotal();
-                  const orderData = {
-                    orderId: 'ORD-' + Date.now(),
-                    date: new Date().toLocaleDateString(),
-                    time: new Date().toLocaleTimeString(),
-                    itemCount: cart.reduce((acc, item) => acc + item.quantity, 0),
-                    total: total,
-                    items: cart
-                  };
-                  localStorage.setItem('lastOrder', JSON.stringify(orderData));
-                  
-                  // Navigate to order placed page
-                  navigate('/order-placed');
-                  
-                  // Clear cart after a short delay to allow navigation
-                  setTimeout(() => {
-                    handleClearCart();
-                  }, 500);
-                }}
+                onClick={() => navigate('/checkout')}
                 className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-md text-sm font-semibold text-center shadow-sm transition flex-1"
               >
                 Checkout
