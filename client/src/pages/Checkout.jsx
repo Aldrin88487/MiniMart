@@ -87,7 +87,7 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
       setTimeout(async () => {
         try {
           const total = calculateTotal();
-          
+
           // Save order to localStorage for the OrderPlaced page
           const orderData = {
             orderId: 'ORD-' + Date.now(),
@@ -102,7 +102,7 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
 
           // Clear cart on backend
           await clearCartAPI();
-          
+
           // Clear cart local state in App.jsx
           setCart([]);
           setCartCount(0);
@@ -152,7 +152,7 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
               <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b">
                 1. Shipping Address
               </h3>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
@@ -164,9 +164,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                     value={shipping.name}
                     onChange={handleShippingChange}
                     placeholder="John Doe"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                      errors.name ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.name ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   />
                   {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                 </div>
@@ -181,9 +180,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                     value={shipping.email}
                     onChange={handleShippingChange}
                     placeholder="john@example.com"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                      errors.email ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.email ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   />
                   {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
@@ -198,9 +196,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                     value={shipping.address}
                     onChange={handleShippingChange}
                     placeholder="123 Main St, Apt 4B"
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                      errors.address ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.address ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   />
                   {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
                 </div>
@@ -216,9 +213,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                       value={shipping.city}
                       onChange={handleShippingChange}
                       placeholder="New York"
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                        errors.city ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.city ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
                   </div>
@@ -233,9 +229,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                       value={shipping.zip}
                       onChange={handleShippingChange}
                       placeholder="10001"
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                        errors.zip ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.zip ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     {errors.zip && <p className="text-red-500 text-xs mt-1">{errors.zip}</p>}
                   </div>
@@ -256,19 +251,6 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-md p-3.5 text-xs text-blue-800 mb-6 flex items-start space-x-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div>
-                  <p className="font-semibold">Stripe Simulation Mode</p>
-                  <p className="mt-0.5">Use the official Stripe test card number below:</p>
-                  <p className="mt-1 font-mono bg-blue-100 border border-blue-200 inline-block px-1.5 py-0.5 rounded text-blue-900 font-bold select-all">
-                    4242 4242 4242 4242
-                  </p>
-                </div>
-              </div>
-
               {/* Stripe elements emulation box */}
               <div className="space-y-4">
                 {/* Credit Card Row */}
@@ -284,9 +266,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                       onChange={handleCardChange}
                       placeholder="4242 4242 4242 4242"
                       maxLength="19"
-                      className={`w-full pl-10 pr-4 py-2.5 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                        errors.cardNumber ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full pl-10 pr-4 py-2.5 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.cardNumber ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'
+                        }`}
                     />
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -310,9 +291,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                       onChange={handleCardChange}
                       placeholder="MM/YY"
                       maxLength="5"
-                      className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                        errors.cardExpiry ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.cardExpiry ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     {errors.cardExpiry && <p className="text-red-500 text-xs mt-1">{errors.cardExpiry}</p>}
                   </div>
@@ -329,9 +309,8 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                       onChange={handleCardChange}
                       placeholder="123"
                       maxLength="3"
-                      className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${
-                        errors.cardCvc ? 'border-red-500' : 'border-gray-300'
-                      }`}
+                      className={`w-full px-3 py-2.5 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.cardCvc ? 'border-red-500' : 'border-gray-300'
+                        }`}
                     />
                     {errors.cardCvc && <p className="text-red-500 text-xs mt-1">{errors.cardCvc}</p>}
                   </div>
@@ -368,7 +347,7 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
             <h3 className="font-semibold text-gray-900 border-b pb-2 mb-4">
               Order Summary
             </h3>
-            
+
             <div className="divide-y divide-gray-100 max-h-56 overflow-y-auto pr-1">
               {cart.map((item) => (
                 <div key={item._id} className="py-2.5 flex items-center justify-between text-xs">
