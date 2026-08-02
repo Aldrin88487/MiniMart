@@ -195,7 +195,7 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                     name="address"
                     value={shipping.address}
                     onChange={handleShippingChange}
-                    placeholder="123 Main St, Apt 4B"
+                    placeholder="4B,ABC Building, XYZ Street, "
                     className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.address ? 'border-red-500' : 'border-gray-300'
                       }`}
                   />
@@ -212,7 +212,7 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                       name="city"
                       value={shipping.city}
                       onChange={handleShippingChange}
-                      placeholder="New York"
+                      placeholder="Kottayam"
                       className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.city ? 'border-red-500' : 'border-gray-300'
                         }`}
                     />
@@ -228,7 +228,7 @@ const Checkout = ({ cart, setCart, setCartCount }) => {
                       name="zip"
                       value={shipping.zip}
                       onChange={handleShippingChange}
-                      placeholder="10001"
+                      placeholder="686001"
                       className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 text-sm ${errors.zip ? 'border-red-500' : 'border-gray-300'
                         }`}
                     />
