@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Looks for the Render environment variable first; defaults to localhost for development
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://minimart-2-sugs.onrender.com';
 
 const api = axios.create({
   baseURL: API_URL,
