@@ -61,7 +61,11 @@ function App() {
       alert('Product added to cart!');
     } catch (error) {
       console.error('Error adding to cart:', error);
-      alert('Failed to add product to cart.');
+      if (error.response) {
+        console.error('Server response:', error.response.data);
+      }
+      const serverMessage = error?.response?.data?.message || error.message;
+      alert(`Failed to add product to cart: ${serverMessage}`);
     }
   };
 
