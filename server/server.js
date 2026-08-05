@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const connectDB = require('./config/db');
 const Product = require('./models/Product');
+const User = require('./models/User');
 
 // Initialize Express app
 const app = express();
@@ -40,6 +41,8 @@ const seedProducts = async () => {
   try {
     const count = await Product.countDocuments();
     if (count === 0) {
+      // Existing product seeding
+
       const defaultProducts = [
         {
           name: "JavaScript: The Good Parts",
@@ -93,11 +96,31 @@ const seedProducts = async () => {
   }
 };
 
+// Seed admin user if not present
+const seedAdmin = async () => {
+  try {
+    const adminEmail = 'admin@minimart.com';
+    const adminExists = await User.findOne({ email: adminEmail });
+    if (!adminExists) {
+      await User.create({
+        name: 'Admin',
+        email: adminEmail,
+        password: 'admin123', // will be hashed by pre-save hook
+        role: 'admin'
+      });
+      console.log('Admin user seeded');
+    }
+  } catch (error) {
+    console.error('Error seeding admin user:', error);
+  }
+};
+
 // Start Server after connecting to Database
 const PORT = process.env.PORT || 5000;
 
 connectDB().then(async () => {
   await seedProducts();
+  await seedAdmin();
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
